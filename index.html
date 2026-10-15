@@ -1,0 +1,358 @@
+<title>AI Safety Funds</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,600;0,700;1,400&display=swap">
+<style>
+/* Layout: a single-column text index. Header, controls, then sections that each read as year-style lists: flows, areas, shifts, methods, ledger, data. Deliberately one light theme so it sits inside a host site unchanged. */
+:root{
+  color-scheme:light;
+  --paper:#FFFFFF; --ink:#000000; --grey:#6B6B6B; --rule:#E2E2E2;
+  --link:#0000EE; --thin:#D2340F;
+  --flow:rgba(0,0,0,.13); --flow-hi:rgba(0,0,238,.55); --flow-thin:rgba(210,52,15,.55);
+  --mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{background:var(--paper);color:var(--ink)}
+body{font-family:var(--mono);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1200px;padding-inline:16px;padding-block:16px 72px;display:grid;gap:44px}
+h1{font-size:clamp(30px,5vw,40px);font-weight:700;line-height:1;margin:0;letter-spacing:-.01em}
+h2{font-size:15px;font-weight:400;margin:0}
+p{margin:0;max-width:78ch}
+b,strong{font-weight:700}
+a{color:var(--link);text-underline-offset:2px}
+.grey{color:var(--grey)}
+.num{font-variant-numeric:tabular-nums}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible,.row[tabindex]:focus-visible{outline:2px solid var(--link);outline-offset:2px}
+header{display:grid;gap:14px}
+.line{display:flex;flex-wrap:wrap;column-gap:.6ch}
+.dot::before{content:"\00B7";margin-right:.6ch;color:var(--ink)}
+.controls{display:grid;gap:4px}
+.opt{color:var(--link);text-decoration:underline;text-underline-offset:2px}
+.opt[aria-pressed="true"]{color:var(--ink);text-decoration:none;font-weight:700}
+.opt.off{color:var(--grey);text-decoration:line-through}
+/* index sections */
+section{display:grid;gap:2px;min-width:0}
+.sec-head{display:grid;grid-template-columns:1fr auto;gap:12px;margin-bottom:6px}
+.row{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr) minmax(9ch,auto);column-gap:24px;align-items:baseline;padding-block:1px}
+.row .t{font-weight:700;min-width:0}
+.row .m{min-width:0}
+.row .r{text-align:right;white-space:nowrap}
+.row[tabindex]{cursor:pointer}
+.row[tabindex]:hover .t{text-decoration:underline;text-underline-offset:3px}
+.row.sel .t::before{content:"\2192  "}
+.thin{color:var(--thin)}
+.note{color:var(--grey);margin-top:8px;max-width:78ch}
+@media (max-width:640px){
+  .row{grid-template-columns:minmax(0,1fr) auto;row-gap:0;padding-block:5px}
+  .row .m{grid-column:1;grid-row:2}
+  .row .r{grid-column:2;grid-row:1 / span 2;align-self:center}
+}
+/* flows */
+.scroll{overflow-x:auto;min-width:0}
+svg.flows{display:block;width:100%;min-width:760px;height:auto}
+svg.flows text{font-family:var(--mono);fill:var(--ink)}
+svg.flows .lk{fill:var(--flow);transition:fill .15s}
+svg.flows .lk.th{fill:var(--flow-thin)}
+svg.flows.hov .lk{fill:rgba(0,0,0,.05)}
+svg.flows.hov .lk.on{fill:var(--flow-hi)}
+svg.flows .nd{fill:var(--ink)}
+svg.flows .hit{fill:transparent;cursor:pointer}
+#flowRead{min-height:1.55em}
+.phone-hint{display:none;font-size:13px}
+@media (max-width:760px){.phone-hint{display:block}}
+/* grids */
+table.grid{border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums}
+table.grid th{font-weight:400;text-align:left;padding:3px 14px 3px 0;white-space:nowrap}
+table.grid thead th{text-align:right;color:var(--grey);padding:3px 0 6px 10px;font-weight:400}
+table.grid td{text-align:right;padding:3px 6px;min-width:62px;white-space:nowrap}
+table.grid td.k{color:var(--paper)}
+table.grid td.z{color:#BDBDBD}
+/* ledger */
+.tools{display:flex;flex-wrap:wrap;gap:10px 22px;align-items:flex-end;margin-bottom:14px}
+.tools input,.tools select{font:inherit;font-size:14px;color:var(--ink);background:transparent;border:0;border-bottom:1.5px solid var(--ink);padding:4px 0;border-radius:0;min-width:0}
+.tools input{flex:1 1 240px;max-width:340px}
+.tools input::placeholder{color:#9A9A9A}
+.yr{margin-top:18px}
+.more{color:var(--link);text-decoration:underline;text-underline-offset:2px;justify-self:start;margin-top:2px}
+pre{font-family:var(--mono);font-size:13px;line-height:1.5;margin:0;overflow-x:auto;max-width:100%}
+details summary{cursor:pointer;list-style:none}
+details summary::-webkit-details-marker{display:none}
+details summary::before{content:"\25B6  ";font-size:.8em}
+details[open] summary::before{content:"\25BC  "}
+details>div{display:grid;gap:10px;margin-top:10px}
+dl.defs{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 18px;margin:0;font-size:14px}
+dl.defs dt{font-weight:700;white-space:nowrap}
+dl.defs dd{margin:0;min-width:0}
+@media (max-width:640px){dl.defs{grid-template-columns:1fr}dl.defs dd{margin-bottom:8px}}
+footer{display:grid;gap:6px;border-top:1px solid var(--rule);padding-top:16px}
+@media (prefers-reduced-motion:reduce){svg.flows .lk{transition:none}}
+</style>
+
+<div class="wrap">
+<header>
+  <h1>AISF</h1>
+  <p>ai safety funds &#183; where public philanthropic money for AI safety goes, sorted into 13 research areas, so the thin spots show.</p>
+  <div class="line grey"><span>Coefficient Giving</span><span class="dot">EA Funds</span><span class="dot">Survival &amp; Flourishing Fund</span><span class="dot">Manifund</span></div>
+  <div class="line"><span id="sTotal" class="num">&#8211;</span><span class="dot num" id="sCount">&#8211;</span><span class="dot grey" id="sFresh">loading</span></div>
+</header>
+
+<div class="controls" role="group" aria-label="Filters">
+  <div class="line"><span class="grey">period</span>
+    <button class="opt" id="pRecent" aria-pressed="true">since 2022</button><span class="dot"></span>
+    <button class="opt" id="pAll" aria-pressed="false">all years</button></div>
+  <div class="line" id="funderOpts"><span class="grey">funders</span></div>
+  <div class="line"><span class="grey">general support</span>
+    <button class="opt" id="infOn" aria-pressed="true">included</button><span class="dot"></span>
+    <button class="opt" id="infOff" aria-pressed="false">excluded</button></div>
+</div>
+
+<section aria-labelledby="h-flows">
+  <div class="sec-head"><h2 id="h-flows">flows</h2><span class="grey">funder &#8594; research area</span></div>
+  <div class="grey phone-hint">scroll sideways for the full diagram</div><div class="scroll"><svg class="flows" id="flows" role="img" aria-label="Funding flows from funders to research areas"></svg></div>
+  <div id="flowRead" class="grey">Hover or tap a flow or area for its total.</div>
+</section>
+
+<section aria-labelledby="h-areas">
+  <div class="sec-head"><h2 id="h-areas">areas</h2><span class="grey" id="areasPeriod"></span></div>
+  <div id="areas"></div>
+  <p class="note" id="gapNote"></p>
+</section>
+
+<section aria-labelledby="h-years">
+  <div class="sec-head"><h2 id="h-years">shifts</h2><span class="grey">area &#215; year, USD</span></div>
+  <div class="scroll"><table class="grid" id="gYear"></table></div>
+  <p class="note">Darker is more. The current year is partial and funders publish with a lag of a few months.</p>
+</section>
+
+<section aria-labelledby="h-method">
+  <div class="sec-head"><h2 id="h-method">methods</h2><span class="grey">share of each area's money</span></div>
+  <div id="methodRows"></div>
+  <div class="scroll" style="margin-top:14px"><table class="grid" id="gMethod"></table></div>
+</section>
+
+<section aria-labelledby="h-ledger" id="ledger">
+  <div class="sec-head"><h2 id="h-ledger">ledger</h2><span class="grey" id="lCount"></span></div>
+  <div class="tools">
+    <input id="q" type="search" placeholder="search grantee or purpose" aria-label="Search grants">
+    <select id="fTopic" aria-label="Research area"></select>
+    <select id="fMethod" aria-label="Method"></select>
+  </div>
+  <div id="lBody"></div>
+</section>
+
+<section aria-labelledby="h-data">
+  <div class="sec-head"><h2 id="h-data">data</h2><span class="grey">machine-readable</span></div>
+  <p>Every grant is one record. The full dataset is public: <a href="data/aisf.json">aisf.json</a> &middot; <a href="llms.txt">llms.txt</a>. Updated weekly; history in the repository.</p>
+  <pre id="sample" style="margin-top:12px"></pre>
+</section>
+
+<footer>
+  <details>
+    <summary>What this does not see</summary>
+    <div>
+      <p><b>Frontier lab spending.</b> Internal safety budgets at Anthropic, Google DeepMind, OpenAI and others are not disclosed by area and likely exceed philanthropy in interpretability, evaluations and alignment.</p>
+      <p><b>Venture capital.</b> Investment in safety-adjacent startups sits behind paid databases.</p>
+      <p><b>Government money.</b> UK AI Security Institute, NSF, EU programmes and similar are not yet included.</p>
+      <p><b>Private donors.</b> Individual and family-office giving is not public. Manifund search returns 50 projects per query, so some older Manifund projects may be missing.</p>
+      <p>Every figure is a floor. A thin area is thin in public philanthropy, not necessarily thin overall.</p>
+    </div>
+  </details>
+  <details>
+    <summary>Method</summary>
+    <div>
+      <p id="covSources" class="grey"></p>
+      <p>Each grant gets one research area and one method, assigned by Claude from its title and description. General-support grants are tagged by the organisation's main focus and marked inferred. Unidentified organisations go to unclassified.</p>
+      <p>Grants between tracked funders (for example Coefficient Giving to EA Funds, SFF to Manifund) are excluded so money is counted once. Multi-year grants count in full at award date, in nominal USD.</p>
+      <dl class="defs" id="defs"></dl>
+    </div>
+  </details>
+  <div class="grey" id="foot"></div>
+</footer>
+</div>
+
+<script>
+const TOPICS={INT:"Interpretability",EVAL:"Evaluations & capability testing",ALN:"Alignment methods & oversight",CTL:"AI control & model security",ROB:"Robustness & adversarial",AF:"Agent foundations & theory",COOP:"Cooperative & multi-agent AI",GOV:"Governance & policy",CMP:"Compute & hardware governance",FCST:"Forecasting & strategy",FB:"Field-building & talent",COMM:"Communications & awareness",SOC:"Societal & sociotechnical impacts",UNK:"Unclassified"};
+const TDEF={INT:"Understanding model internals: mechanistic and developmental interpretability, probing.",EVAL:"Benchmarks and tests for dangerous capabilities, propensities and behaviour.",ALN:"Training-time alignment, scalable oversight, debate, value learning.",CTL:"Control protocols, monitoring, chain-of-thought faithfulness, weight security.",ROB:"Adversarial robustness, jailbreaks, unlearning, out-of-distribution behaviour.",AF:"Theory of agency, decision theory, abstraction, formal verification.",COOP:"Multi-agent safety, cooperation, conflict and collusion between AI systems.",GOV:"Policy research, advocacy, standards, law, international coordination.",CMP:"Compute governance, export controls, hardware-enabled guarantees.",FCST:"Timelines, trends, expert surveys, scenarios, macrostrategy.",FB:"Fellowships, courses, student groups, offices, events, career stipends.",COMM:"Journalism, video, books, podcasts, public campaigns.",SOC:"Effects on people and institutions: epistemics, democracy, labour, model welfare, misuse.",UNK:"Organisations whose focus could not be identified."};
+const METHODS={TE:"Technical empirical",TH:"Theoretical",QS:"Qualitative & social science",PA:"Policy analysis & advocacy",INF:"Infrastructure & programmes",UN:"Unclear"};
+const FUNDERS=[["Coefficient Giving","Coefficient Giving"],["EA Funds","EA Funds"],["SFF","SFF"],["Manifund","Manifund"]];
+const state={period:"recent",funders:new Set(FUNDERS.map(f=>f[0])),inf:true,topic:"",method:"",q:"",open:{}};
+let base=[],live=new Map(),built="",flowHover=null;
+const $=id=>document.getElementById(id);
+const fmt=v=>v>=1e9?"$"+(v/1e9).toFixed(2)+"B":v>=1e6?"$"+(v/1e6).toFixed(v>=1e8?0:1)+"M":v>=1e3?"$"+Math.round(v/1e3)+"K":"$"+Math.round(v);
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const sum=a=>a.reduce((s,r)=>s+r.amount,0);
+const pct=(a,b)=>b?(a/b*100).toFixed(1)+"%":"0%";
+
+function rows(){
+  const all=new Map(base.map(r=>[r.id,r]));
+  for(const [id,r] of live) all.set(id,r);
+  return [...all.values()].filter(r=>(state.period==="all"||r.year>=2022)&&state.funders.has(r.source)&&(state.inf||!r.inferred));
+}
+
+function render(){
+  const R=rows(), total=sum(R);
+  $("sTotal").textContent=fmt(total)+" tracked";
+  $("sCount").textContent=R.length.toLocaleString()+" grants";
+  $("areasPeriod").textContent=state.period==="all"?"all years":"since 2022";
+  const by={}; for(const k in TOPICS) by[k]=[];
+  R.forEach(r=>(by[r.topic]||(by[r.topic]=[])).push(r));
+  const ranked=Object.keys(TOPICS).filter(k=>k!=="UNK").map(k=>({k,v:sum(by[k]),n:by[k].length})).sort((a,b)=>b.v-a.v);
+  const thin=new Set(ranked.slice(-4).map(d=>d.k));
+  flows(R,ranked,thin,total);
+  areas(ranked,thin,total,by);
+  gridYear(R,ranked); methods(R,ranked,total); ledger(R);
+}
+
+/* ---------- flows (sankey) ---------- */
+function flows(R,ranked,thin,total){
+  const svg=$("flows");
+  const fk=FUNDERS.map(f=>f[0]).filter(f=>state.funders.has(f));
+  const ak=[...ranked.map(d=>d.k),"UNK"];
+  const link={}; R.forEach(r=>{const key=r.source+"|"+r.topic;link[key]=(link[key]||0)+r.amount});
+  const fT=Object.fromEntries(fk.map(f=>[f,0])), aT=Object.fromEntries(ak.map(a=>[a,0]));
+  for(const key in link){const [f,a]=key.split("|");if(f in fT&&a in aT){fT[f]+=link[key];aT[a]+=link[key]}}
+  const fOrd=fk.filter(f=>fT[f]>0).sort((a,b)=>fT[b]-fT[a]);
+  const aOrd=ak.filter(a=>aT[a]>0);
+  const W=980,H=600,x0=214,x1=650,nw=5,gapL=18,gapR=13,top=6;
+  const T=Object.values(fT).reduce((s,v)=>s+v,0)||1;
+  const k=(H-top*2-Math.max(gapL*(fOrd.length-1),gapR*(aOrd.length-1)))/T;
+  const nh=v=>Math.max(v*k,1.5);
+  const fy={},ay={};
+  let lh=fOrd.reduce((s,f)=>s+nh(fT[f]),0)+gapL*(fOrd.length-1), y=top+(H-top*2-lh)/2;
+  fOrd.forEach(f=>{fy[f]=y;y+=nh(fT[f])+gapL});
+  let rh=aOrd.reduce((s,a)=>s+nh(aT[a]),0)+gapR*(aOrd.length-1); y=top+(H-top*2-rh)/2;
+  aOrd.forEach(a=>{ay[a]=y;y+=nh(aT[a])+gapR});
+  const fo={...fy}, ao={...ay}; let p="";
+  fOrd.forEach(f=>aOrd.forEach(a=>{
+    const v=link[f+"|"+a]; if(!v) return; const w=v*k;
+    const ya=fo[f], yb=ay[a]===ao[a]&&false?0:ao[a]; fo[f]+=w; ao[a]+=w;
+    const xm=(x0+nw+x1)/2, X0=x0+nw, X1=x1;
+    p+=`<path class="lk${thin.has(a)?" th":""}" data-f="${esc(f)}" data-a="${a}" data-v="${v}" d="M${X0},${ya}C${xm},${ya} ${xm},${yb} ${X1},${yb}L${X1},${yb+w}C${xm},${yb+w} ${xm},${ya+w} ${X0},${ya+w}Z"/>`;
+  }));
+  let n="";
+  const lcy={}; let prev=-1e9;
+  fOrd.forEach(f=>{let c=fy[f]+nh(fT[f])/2; if(c<prev+34)c=prev+34; lcy[f]=c; prev=c});
+  fOrd.forEach(f=>{const h=nh(fT[f]);const cy=lcy[f];
+    n+=`<rect class="nd" x="${x0}" y="${fy[f]}" width="${nw}" height="${h}"/>`+
+      `<text x="${x0-12}" y="${cy-3}" text-anchor="end" font-size="13" font-weight="700">${esc(FUNDERS.find(x=>x[0]===f)[1])}</text>`+
+      `<text x="${x0-12}" y="${cy+13}" text-anchor="end" font-size="12" fill="#6B6B6B" style="fill:#6B6B6B">${fmt(fT[f])}</text>`+
+      `<rect class="hit" data-f="${esc(f)}" x="0" y="${fy[f]-4}" width="${x0+nw}" height="${h+8}"/>`});
+  aOrd.forEach(a=>{const h=nh(aT[a]);const cy=ay[a]+h/2;const th=thin.has(a);
+    n+=`<rect class="nd" x="${x1}" y="${ay[a]}" width="${nw}" height="${h}"${th?' style="fill:#D2340F"':""}/>`+
+      `<text x="${x1+14}" y="${cy+4}" font-size="12"${th?' style="fill:#D2340F"':""}><tspan font-weight="700">${esc(TOPICS[a].toLowerCase().replace(/\bai\b/g,"AI"))}</tspan>  ${fmt(aT[a])}</text>`+
+      `<rect class="hit" data-a="${a}" x="${x1}" y="${ay[a]-5}" width="${W-x1}" height="${h+10}"/>`});
+  svg.setAttribute("viewBox",`0 0 ${W} ${H}`);
+  svg.innerHTML=p+n;
+  const read=$("flowRead"), def="Hover or tap a flow or area for its total.";
+  const clear=()=>{svg.classList.remove("hov");svg.querySelectorAll(".on").forEach(e=>e.classList.remove("on"));read.textContent=def};
+  const show=(sel,txt)=>{svg.classList.add("hov");svg.querySelectorAll(".lk").forEach(e=>e.classList.toggle("on",sel(e)));read.innerHTML=txt};
+  svg.querySelectorAll(".lk").forEach(el=>{
+    const on=()=>show(e=>e===el,`<b>${esc(el.dataset.f)}</b> \u2192 <b>${esc(TOPICS[el.dataset.a])}</b>  ${fmt(+el.dataset.v)}  <span class="grey">${pct(+el.dataset.v,total)} of all</span>`);
+    el.addEventListener("pointerenter",on); el.addEventListener("click",on); el.addEventListener("pointerleave",clear)});
+  svg.querySelectorAll(".hit[data-a]").forEach(el=>{const a=el.dataset.a;
+    const on=()=>show(e=>e.dataset.a===a,`<b>${esc(TOPICS[a])}</b>  ${fmt(aT[a])}  <span class="grey">${pct(aT[a],total)} of all \u00b7 ${fOrd.filter(f=>link[f+"|"+a]).map(f=>esc(f)+" "+fmt(link[f+"|"+a])).join(" \u00b7 ")}</span>`);
+    el.addEventListener("pointerenter",on); el.addEventListener("pointerleave",clear);
+    el.addEventListener("click",()=>{on();pickTopic(a)})});
+  svg.querySelectorAll(".hit[data-f]").forEach(el=>{const f=el.dataset.f;
+    const on=()=>show(e=>e.dataset.f===f,`<b>${esc(f)}</b>  ${fmt(fT[f])}  <span class="grey">${pct(fT[f],total)} of all</span>`);
+    el.addEventListener("pointerenter",on); el.addEventListener("click",on); el.addEventListener("pointerleave",clear)});
+}
+
+/* ---------- areas index ---------- */
+function areas(ranked,thin,total,by){
+  const box=$("areas"); box.innerHTML="";
+  ranked.forEach(d=>{
+    const row=document.createElement("div"); row.className="row"+(state.topic===d.k?" sel":""); row.tabIndex=0; row.setAttribute("role","button");
+    row.innerHTML=`<span class="t${thin.has(d.k)?" thin":""}">${esc(TOPICS[d.k])}</span>
+      <span class="m">${d.n} grants \u00b7 ${pct(d.v,total)}${thin.has(d.k)?' \u00b7 <span class="thin">thin</span>':""}</span>
+      <span class="r num">${fmt(d.v)}</span>`;
+    row.onclick=()=>pickTopic(d.k);
+    row.onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();pickTopic(d.k)}};
+    box.appendChild(row);
+  });
+  const unk=sum(by.UNK||[]);
+  const t4=ranked.slice(-4), t4v=t4.reduce((s,d)=>s+d.v,0);
+  $("gapNote").innerHTML=`The four thinnest areas received ${fmt(t4v)} together, ${pct(t4v,total)} of tracked money. ${esc(TOPICS[ranked[0].k])} alone received ${fmt(ranked[0].v)}.`+(unk?` Not listed: ${fmt(unk)} to ${by.UNK.length} unidentified organisations.`:"");
+}
+function pickTopic(k){state.topic=state.topic===k?"":k;$("fTopic").value=state.topic;state.open={};render();if(state.topic)$("ledger").scrollIntoView({behavior:"smooth"})}
+
+/* ---------- grids ---------- */
+function shade(t){const g=Math.round(255-t*235);return `rgb(${g},${g},${g})`}
+function gridYear(R,ranked){
+  const years=[...new Set(R.map(r=>r.year))].sort(); const c={}; let mx=0;
+  R.forEach(r=>{const k=r.topic+"|"+r.year;c[k]=(c[k]||0)+r.amount});
+  ranked.forEach(d=>years.forEach(y=>mx=Math.max(mx,c[d.k+"|"+y]||0)));
+  let h=`<thead><tr><th></th>${years.map(y=>`<th>${y}${y===2026?"*":""}</th>`).join("")}</tr></thead><tbody>`;
+  ranked.forEach(d=>{h+=`<tr><th>${esc(TOPICS[d.k])}</th>`+years.map(y=>{const v=c[d.k+"|"+y]||0;if(!v)return`<td class="z">\u00b7</td>`;const t=Math.sqrt(v/mx);
+    return `<td class="${t>.55?"k":""}" style="background:${shade(t)}" title="${esc(TOPICS[d.k])} ${y}: ${fmt(v)}">${fmt(v).slice(1)}</td>`}).join("")+"</tr>"});
+  $("gYear").innerHTML=h+"</tbody>";
+}
+function methods(R,ranked,total){
+  const mt=Object.keys(METHODS).map(m=>({m,v:sum(R.filter(r=>r.method===m)),n:R.filter(r=>r.method===m).length})).sort((a,b)=>b.v-a.v);
+  $("methodRows").innerHTML=mt.map(d=>`<div class="row"><span class="t">${esc(METHODS[d.m])}</span><span class="m">${d.n} grants \u00b7 ${pct(d.v,total)}</span><span class="r num">${fmt(d.v)}</span></div>`).join("");
+  const cols=mt.map(d=>d.m), c={};
+  R.forEach(r=>{const k=r.topic+"|"+r.method;c[k]=(c[k]||0)+r.amount});
+  let h=`<thead><tr><th></th>${cols.map(m=>`<th>${esc(METHODS[m].split(" ")[0].toLowerCase())}</th>`).join("")}</tr></thead><tbody>`;
+  ranked.forEach(d=>{const rt=d.v||1;h+=`<tr><th>${esc(TOPICS[d.k])}</th>`+cols.map(m=>{const v=c[d.k+"|"+m]||0,p=v/rt;
+    if(!v)return`<td class="z">\u00b7</td>`;return `<td class="${p>.45?"k":""}" style="background:${shade(Math.sqrt(p))}" title="${esc(TOPICS[d.k])}, ${esc(METHODS[m])}: ${fmt(v)}">${Math.round(p*100)}%</td>`}).join("")+"</tr>"});
+  $("gMethod").innerHTML=h+"</tbody>";
+}
+
+/* ---------- ledger ---------- */
+function ledger(R){
+  const q=state.q.toLowerCase();
+  const G=R.filter(r=>(!state.topic||r.topic===state.topic)&&(!state.method||r.method===state.method)&&(!q||(r.grantee+" "+r.title+" "+r.desc).toLowerCase().includes(q)));
+  $("lCount").textContent=`${G.length.toLocaleString()} grants \u00b7 ${fmt(sum(G))}`+(state.topic?` \u00b7 ${TOPICS[state.topic].toLowerCase()}`:"");
+  const byY={}; G.forEach(r=>(byY[r.year]||(byY[r.year]=[])).push(r));
+  const years=Object.keys(byY).sort((a,b)=>b-a); const now=new Date().getFullYear();
+  let h="";
+  years.forEach(y=>{
+    const list=byY[y].sort((a,b)=>b.amount-a.amount); const lim=state.open[y]||8;
+    h+=`<div class="sec-head yr"><span>${y}</span><span class="grey">${+y===now?"current \u00b7 ":""}${fmt(sum(list))}</span></div>`;
+    h+=list.slice(0,lim).map(r=>`<div class="row"><span class="t">${esc(r.grantee||"Individual grantee")}</span><span class="m">${esc(r.title)}<br><span class="grey">${esc(TOPICS[r.topic]||r.topic)} \u00b7 ${esc(r.funder)}${r.inferred?" \u00b7 inferred":""}</span></span><span class="r num">${fmt(r.amount)}</span></div>`).join("");
+    if(list.length>lim) h+=`<button class="more" data-y="${y}">+ ${list.length-lim} more in ${y}</button>`;
+  });
+  $("lBody").innerHTML=h||'<p class="grey">No grants match.</p>';
+  $("lBody").querySelectorAll(".more").forEach(b=>b.onclick=()=>{state.open[b.dataset.y]=(state.open[b.dataset.y]||8)+40;render()});
+}
+
+/* ---------- controls ---------- */
+function controls(){
+  const fo=$("funderOpts");
+  FUNDERS.forEach(([f,l],i)=>{if(i){const d=document.createElement("span");d.className="dot";fo.appendChild(d)}
+    const b=document.createElement("button");b.className="opt";b.textContent=l;b.setAttribute("aria-pressed","true");
+    b.onclick=()=>{if(state.funders.has(f)){if(state.funders.size===1)return;state.funders.delete(f)}else state.funders.add(f);
+      b.setAttribute("aria-pressed",state.funders.has(f));b.classList.toggle("off",!state.funders.has(f));render()};
+    fo.appendChild(b)});
+  const pair=(a,b,set)=>{const go=v=>{$(a).setAttribute("aria-pressed",v);$(b).setAttribute("aria-pressed",!v);set(v);render()};$(a).onclick=()=>go(true);$(b).onclick=()=>go(false)};
+  pair("pRecent","pAll",v=>state.period=v?"recent":"all");
+  pair("infOn","infOff",v=>state.inf=v);
+  $("fTopic").innerHTML=`<option value="">all areas</option>`+Object.entries(TOPICS).map(([k,v])=>`<option value="${k}">${esc(v.toLowerCase())}</option>`).join("");
+  $("fMethod").innerHTML=`<option value="">all methods</option>`+Object.entries(METHODS).map(([k,v])=>`<option value="${k}">${esc(v.toLowerCase())}</option>`).join("");
+  $("fTopic").onchange=e=>{state.topic=e.target.value;state.open={};render()};
+  $("fMethod").onchange=e=>{state.method=e.target.value;state.open={};render()};
+  let t;$("q").oninput=e=>{clearTimeout(t);t=setTimeout(()=>{state.q=e.target.value;state.open={};render()},150)};
+  $("defs").innerHTML=Object.entries(TOPICS).map(([k,v])=>`<dt>${esc(v)}</dt><dd>${esc(TDEF[k])}</dd>`).join("");
+}
+function freshness(meta){
+  const last=meta.lastRun?new Date(meta.lastRun):null;
+  const d=x=>x.toISOString().slice(0,10);
+  $("sFresh").textContent=last?`updated ${d(last)} \u00b7 refreshed weekly`:`data ${built} \u00b7 refreshed weekly`;
+  $("foot").textContent=`AISF \u00b7 data ${last?d(last):built} \u00b7 built from public grant databases`;
+}
+
+async function boot(){
+  controls();
+  try{
+    const src=document.currentScript?.dataset.src||window.AISF_DATA||"data/aisf.json";
+    const data=await (await fetch(src,{cache:"no-cache"})).json();
+    const F=data.meta.fields; built=data.meta.built;
+    base=data.rows.map(a=>Object.fromEntries(F.map((f,i)=>[f,a[i]])));
+    $("covSources").textContent="Sources. "+Object.entries(data.meta.coverage).map(([k,v])=>k+": "+v).join(". ")+".";
+    const s=base.find(r=>r.topic==="COOP"&&r.source==="Manifund")||base[0];
+    $("sample").textContent=JSON.stringify({id:s.id,funder:s.funder,grantee:s.grantee,title:s.title,amount_usd:s.amount,date:s.date,area:TOPICS[s.topic],method:METHODS[s.method],inferred:!!s.inferred},null,2);
+    render(); freshness(data.meta);
+  }catch(e){$("sFresh").textContent="could not load the grant data, reload to try again"}
+}
+boot();
+</script>

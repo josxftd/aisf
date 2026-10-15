@@ -1,0 +1,21 @@
+# AISF (ai safety funds)
+
+> Public philanthropic grants to AI safety, classified by research area and method, updated weekly. Built to show which areas are thinly funded.
+
+Data covers Coefficient Giving (formerly Open Philanthropy), EA Funds (Long-Term Future Fund, EA Infrastructure Fund), the Survival and Flourishing Fund, and Manifund. It excludes frontier lab internal spending, venture capital, government funding and private donors, so every figure is a floor.
+
+## Data
+
+- [aisf.json](data/aisf.json): every grant as one record. `meta.fields` gives the column order of each row: id, source, funder, grantee, title, amount (nominal USD), date (YYYY-MM), year, topic, method, inferred, desc.
+
+## Codes
+
+topic: INT interpretability; EVAL evaluations and capability testing; ALN alignment methods and oversight; CTL AI control and model security; ROB robustness and adversarial; AF agent foundations and theory; COOP cooperative and multi-agent AI; GOV governance and policy; CMP compute and hardware governance; FCST forecasting and strategy; FB field-building and talent; COMM communications and awareness; SOC societal and sociotechnical impacts; UNK unclassified.
+
+method: TE technical empirical; TH theoretical; QS qualitative and social science; PA policy analysis and advocacy; INF infrastructure and programmes; UN unclear.
+
+inferred: 1 when a general-support grant was tagged by the organisation's main focus rather than a stated purpose.
+
+## Method
+
+Classification is done by Claude (Anthropic) from each grant's title and description. Grants between tracked funders are excluded so money is counted once. Multi-year grants count in full at award date.
