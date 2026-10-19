@@ -2,6 +2,8 @@ name: Fetch grant sources
 
 # Downloads the public grant files each week so the Monday classification run
 # works from complete data. Runs Sunday evening UK time; can also be run by hand.
+# Each source is fetched independently: one failing does not block the other.
+# Results are written to data/raw/fetch_log.txt so the Monday task can see them.
 on:
   schedule:
     - cron: "0 20 * * 0"
@@ -16,25 +18,38 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Download Coefficient Giving grants archive
+      - name: Download sources
         run: |
-          curl -fsSL --retry 3 -A "AISF data bot (+https://github.com/${{ github.repository }})" \
-            -o data/raw/coefficient-giving.csv \
-            "https://coefficientgiving.org/wp-content/uploads/Coefficient-Giving-Grants-Archive.csv"
+          UA="Mozilla/5.0 (compatible; AISF data bot; +https://github.com/${{ github.repository }})"
+          log=data/raw/fetch_log.txt
+          echo "run $(date -u +%FT%TZ)" > "$log"
+          ok=0
+          fetch () {
+            name="$1"; url="$2"; out="$3"
+            tmp=$(mktemp)
+            code=$(curl -sSL --retry 3 -A "$UA" -o "$tmp" -w '%{http_code} %{content_type}' "$url" 2>&1) || true
+            size=$(wc -c < "$tmp")
+            head1=$(head -c 200 "$tmp" | tr -d '\r' | head -n1)
+            if [ "${code%% *}" = "200" ] && [ "$size" -gt 1000 ] && ! grep -qi '<html' <(head -c 500 "$tmp"); then
+              mv "$tmp" "$out"; echo "$name OK $code bytes=$size" >> "$log"; ok=$((ok+1))
+            else
+              echo "$name FAILED $code bytes=$size first_line=$head1" >> "$log"
+            fi
+          }
+          fetch coefficient-giving "https://coefficientgiving.org/wp-content/uploads/Coefficient-Giving-Grants-Archive.csv" data/raw/coefficient-giving.csv
+          fetch ea-funds "https://funds.effectivealtruism.org/api/grants" data/raw/ea-funds.csv
+          cat "$log"
+          [ "$ok" -gt 0 ] && date -u +"%Y-%m-%dT%H:%M:%SZ" > data/raw/fetched_at.txt || true
+          echo "ok=$ok" >> "$GITHUB_ENV"
 
-      - name: Download EA Funds grants
-        run: |
-          curl -fsSL --retry 3 -A "AISF data bot (+https://github.com/${{ github.repository }})" \
-            -o data/raw/ea-funds.csv \
-            "https://funds.effectivealtruism.org/api/grants"
-
-      - name: Record fetch time
-        run: date -u +"%Y-%m-%dT%H:%M:%SZ" > data/raw/fetched_at.txt
-
-      - name: Commit if changed
+      - name: Commit results
         run: |
           git config user.name "aisf-bot"
           git config user.email "aisf-bot@users.noreply.github.com"
           git add data/raw
           git diff --cached --quiet || git commit -m "Fetch grant sources $(date -u +%F)"
           git push
+
+      - name: Fail if nothing downloaded
+        if: env.ok == '0'
+        run: exit 1
