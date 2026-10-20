@@ -43,6 +43,8 @@ section{display:grid;gap:2px;min-width:0}
 .row{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr) minmax(9ch,auto);column-gap:24px;align-items:baseline;padding-block:1px}
 .row .t{font-weight:700;min-width:0}
 .row .m{min-width:0}
+.row a.src{color:inherit;text-underline-offset:2px}
+.row a.src:hover{color:var(--ink)}
 .row .r{text-align:right;white-space:nowrap}
 .row[tabindex]{cursor:pointer}
 .row[tabindex]:hover .t{text-decoration:underline;text-underline-offset:3px}
@@ -189,6 +191,19 @@ let base=[],live=new Map(),built="",flowHover=null;
 const $=id=>document.getElementById(id);
 const fmt=v=>v>=1e9?"$"+(v/1e9).toFixed(2)+"B":v>=1e6?"$"+(v/1e6).toFixed(v>=1e8?0:1)+"M":v>=1e3?"$"+Math.round(v/1e3)+"K":"$"+Math.round(v);
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+/* Source link per grant. Manifund has a page per project; SFF a page per round; EA Funds and Coefficient Giving
+   publish no per-grant pages, so those link to the database and to the archived copy of the CSV in this repo. */
+function srcUrl(r){
+  if(r.url)return r.url;
+  if(r.source==="Manifund")return "https://manifund.org/projects/"+r.id.slice(3);
+  if(r.source==="SFF"){const y=+String(r.date).slice(0,4),m=+String(r.date).slice(5,7),b="https://survivalandflourishing.fund/";
+    if(/flexHEG/i.test(r.title))return b+"2024/flexhegs-recommendations";
+    return y>=2024?`${b}${y}/recommendations`:`${b}${y}/${m<=6?"h1":"h2"}/recommendations`}
+  if(r.source==="EA Funds")return "https://funds.effectivealtruism.org/grants";
+  if(r.source==="Coefficient Giving")return "https://github.com/josxftd/aisf/blob/main/data/raw/coefficient-giving.csv";
+  return "";
+}
+const SRCLBL={"Manifund":"project page","SFF":"SFF round","EA Funds":"EA Funds database","Coefficient Giving":"source file"};
 const sum=a=>a.reduce((s,r)=>s+r.amount,0);
 const pct=(a,b)=>b?(a/b*100).toFixed(1)+"%":"0%";
 
@@ -318,7 +333,7 @@ function ledger(R){
   years.forEach(y=>{
     const list=byY[y].sort((a,b)=>b.amount-a.amount); const lim=state.open[y]||8;
     h+=`<div class="sec-head yr"><span>${y}</span><span class="grey">${+y===now?"current \u00b7 ":""}${fmt(sum(list))}</span></div>`;
-    h+=list.slice(0,lim).map(r=>`<div class="row"><span class="t">${esc(r.grantee||"Individual grantee")}</span><span class="m">${esc(r.title)}<br><span class="grey">${esc(TOPICS[r.topic]||r.topic)} \u00b7 ${esc(r.funder)}${r.inferred?" \u00b7 inferred":""}</span></span><span class="r num">${fmt(r.amount)}</span></div>`).join("");
+    h+=list.slice(0,lim).map(r=>`<div class="row"><span class="t">${esc(r.grantee||"Individual grantee")}</span><span class="m">${esc(r.title)}<br><span class="grey">${esc(TOPICS[r.topic]||r.topic)} \u00b7 ${esc(r.funder)}${r.inferred?" \u00b7 inferred":""}${srcUrl(r)?` \u00b7 <a class="src" href="${esc(srcUrl(r))}" target="_blank" rel="noopener">${SRCLBL[r.source]||"source"}</a>`:""}</span></span><span class="r num">${fmt(r.amount)}</span></div>`).join("");
     if(list.length>lim) h+=`<button class="more" data-y="${y}">+ ${list.length-lim} more in ${y}</button>`;
   });
   $("lBody").innerHTML=h||'<p class="grey">No grants match.</p>';
@@ -345,8 +360,8 @@ function controls(){
 }
 function freshness(meta){
   const last=meta.lastRun?new Date(meta.lastRun):null;
-  const d=x=>x.toISOString().slice(0,10);
-  $("sFresh").textContent=last?`updated ${d(last)} \u00b7 refreshed weekly`:`data ${built} \u00b7 refreshed weekly`;
+  const d=x=>x.toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric",timeZone:"Europe/London"});
+  $("sFresh").textContent=`data correct as of ${last?d(last):built} \u00b7 refreshed every Monday`;
   $("foot").textContent=`AISF \u00b7 data ${last?d(last):built} \u00b7 built from public grant databases`;
 }
 

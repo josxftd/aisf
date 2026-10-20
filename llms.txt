@@ -6,7 +6,9 @@ Data covers Coefficient Giving (formerly Open Philanthropy), EA Funds (Long-Term
 
 ## Data
 
-- [aisf.json](data/aisf.json): every grant as one record. `meta.fields` gives the column order of each row: id, source, funder, grantee, title, amount (nominal USD), date (YYYY-MM), year, topic, method, inferred, desc.
+- [aisf.json](data/aisf.json): every grant as one record. `meta.fields` gives the column order of each row: id, source, funder, grantee, title, amount (nominal USD), date (YYYY-MM), year, topic, method, inferred, desc, url.
+
+url: the most specific public source. Manifund links to the project page and SFF to the recommendation round. EA Funds and Coefficient Giving publish no per-grant pages, so these link to the EA Funds database and to the archived copy of the Coefficient Giving CSV in this repository.
 
 ## Codes
 
