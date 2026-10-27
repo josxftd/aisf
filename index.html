@@ -102,8 +102,8 @@ footer{display:grid;gap:6px;border-top:1px solid var(--rule);padding-top:16px}
 <div class="wrap">
 <header>
   <h1>AISF</h1>
-  <p>ai safety funds &#183; where public philanthropic money for AI safety goes, sorted into 13 research areas, so the thin spots show.</p>
-  <div class="line grey"><span>Coefficient Giving</span><span class="dot">EA Funds</span><span class="dot">Survival &amp; Flourishing Fund</span><span class="dot">Manifund</span></div>
+  <p>ai safety funds &#183; where money for AI safety goes, sorted into ~13x research areas, so underfunded spots show.</p>
+<!-- <div class="line grey"><span>Coefficient Giving</span><span class="dot">EA Funds</span><span class="dot">Survival &amp; Flourishing Fund</span><span class="dot">Manifund</span></div> -->
   <div class="line"><span id="sTotal" class="num">&#8211;</span><span class="dot num" id="sCount">&#8211;</span><span class="dot grey" id="sFresh">loading</span></div>
 </header>
 
@@ -118,19 +118,19 @@ footer{display:grid;gap:6px;border-top:1px solid var(--rule);padding-top:16px}
 </div>
 
 <section aria-labelledby="h-flows">
-  <div class="sec-head"><h2 id="h-flows">flows</h2><span class="grey">funder &#8594; research area</span></div>
+  <div class="sec-head"><h2 id="h-flows">funding flows</h2><span class="grey">funder &#8594; research area</span></div>
   <div class="grey phone-hint">scroll sideways for the full diagram</div><div class="scroll"><svg class="flows" id="flows" role="img" aria-label="Funding flows from funders to research areas"></svg></div>
   <div id="flowRead" class="grey">Hover or tap a flow or area for its total.</div>
 </section>
 
 <section aria-labelledby="h-areas">
-  <div class="sec-head"><h2 id="h-areas">areas</h2><span class="grey" id="areasPeriod"></span></div>
+  <div class="sec-head"><h2 id="h-areas">funded areas</h2><span class="grey" id="areasPeriod"></span></div>
   <div id="areas"></div>
   <p class="note" id="gapNote"></p>
 </section>
 
 <section aria-labelledby="h-years">
-  <div class="sec-head"><h2 id="h-years">shifts</h2><span class="grey">area &#215; year, USD</span></div>
+  <div class="sec-head"><h2 id="h-years">trends over time</h2><span class="grey">area &#215; year, USD</span></div>
   <div class="scroll"><table class="grid" id="gYear"></table></div>
   <p class="note">Darker is more. The current year is partial and funders publish with a lag of a few months.</p>
 </section>
