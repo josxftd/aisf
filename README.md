@@ -1,6 +1,6 @@
 # AISF (ai safety funds)
 
-Where public philanthropic money for AI safety goes, sorted into 13 research areas so the thinly funded ones show.
+Where money for AI safety flows, sorted into ~13x research areas, so underfunded spots show.
 
 - **Site:** `index.html`, served by GitHub Pages.
 - **Data:** `data/aisf.json`, one record per grant. See `llms.txt` for the schema and codes.
@@ -14,4 +14,4 @@ Where public philanthropic money for AI safety goes, sorted into 13 research are
 
 ## Coverage
 
-Coefficient Giving, EA Funds (LTFF, EAIF), Survival and Flourishing Fund, Manifund. Not covered: frontier lab internal spending, venture capital, government funding, private donors. Every figure is a floor.
+Coefficient Giving, EA Funds (LTFF, EAIF), Survival and Flourishing Fund, Manifund. Not currently covered: frontier lab internal spending, venture capital, government funding, private donors.
