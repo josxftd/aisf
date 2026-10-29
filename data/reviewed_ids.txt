@@ -710,6 +710,7 @@ eaf_rec0IQREtRwHuOORV
 eaf_rec0Q4TT16VdLmIVe
 eaf_rec0UukJaAEJkyBjl
 eaf_rec0drGAibIdyTy2p
+eaf_rec0h9pp9uNzjNqFY
 eaf_rec0lqXulF36Z8RIF
 eaf_rec0m2qCpkxpeLVKU
 eaf_rec0xF8h8o1SypCoC
@@ -979,6 +980,7 @@ eaf_recN07RdZBWvLFK00
 eaf_recN3BoHxqyCSzytV
 eaf_recN7nK549cExikfx
 eaf_recNBOKP0C9d1PCJd
+eaf_recNP6zRcxPu0L1nb
 eaf_recNW4xmeeLysLk73
 eaf_recNhhV8rdxwOtKhm
 eaf_recNn23b3FOOJFlgr
@@ -1006,6 +1008,7 @@ eaf_recPVrYrvWGaA5z0q
 eaf_recPbhHLiug0Z9fit
 eaf_recPfG2X7gVGdly92
 eaf_recPgP3QfKiuMEs0O
+eaf_recPkfinBoW3aSUfL
 eaf_recPphA0Wp7dYCaXD
 eaf_recPrNjdx5AVTVWX4
 eaf_recPs3OkeThwTQXMq
@@ -1085,6 +1088,7 @@ eaf_recVl8QHGA1ZnRvaa
 eaf_recVpOYc1HyWhEPRk
 eaf_recVx9my8xr5XAW5r
 eaf_recW58HsNAd2Wcucs
+eaf_recW8Dv06pangFTt5
 eaf_recW8jDg0ITZ97Srf
 eaf_recWDvAEmhG8qp6Fa
 eaf_recWE927Jv1LhPsyN
@@ -1269,6 +1273,7 @@ eaf_reclR4vy52kiPlISm
 eaf_reclfyDslLuQahVDr
 eaf_reclyGqvuHUQ2s4yH
 eaf_reclyHhrNCTYDqEot
+eaf_recm20jMjAHE4SozN
 eaf_recm9v2IMyn4tBa2o
 eaf_recmD3jpGgKBGoL7i
 eaf_recmErpVr35ootUn6
@@ -1319,6 +1324,7 @@ eaf_recpCUGpYlwpMaFNl
 eaf_recpHJ5MMnkC58WzN
 eaf_recpRm1DZ1iq0Go3M
 eaf_recpS9KKFVMG9NGtK
+eaf_recpTSxxtXv123Yab
 eaf_recpV4M0jLPpEHDdN
 eaf_recpdNxz9rhMMHq5e
 eaf_recphc4I70F4Gxctu
@@ -1382,6 +1388,7 @@ eaf_recvuVNAhmzFgC02c
 eaf_recvuhpiIHfqYQLJT
 eaf_recw5CCXXzDCfh6Rf
 eaf_recw5zL94080aj721
+eaf_recw7NrDjUfeUlUl4
 eaf_recwFpPxM8fL3PkYJ
 eaf_recwJxxp38Qs6YeqX
 eaf_recwMCeAHSDzJh0sK
@@ -1516,6 +1523,7 @@ mf_help-the-argentinian-ai-safety-community-grow
 mf_holly-elmore-organizing-people-for-a-frontier-ai-moratorium
 mf_how-can-governments-hedge-against-mass-labour-automation
 mf_how-then-shall-we-live-meaning-in-the-age-of-ai
+mf_human-access-animated-short-series-confronting-ai-threat
 mf_icml-workshop-travel-cross-constitution-drift-in-llm-charact
 mf_ilina-junior-research-fellowship
 mf_implicit-planning-in-llms-paper
