@@ -38,9 +38,37 @@ jobs:
           }
           fetch coefficient-giving "https://coefficientgiving.org/wp-content/uploads/Coefficient-Giving-Grants-Archive.csv" data/raw/coefficient-giving.csv
           fetch ea-funds "https://funds.effectivealtruism.org/api/grants" data/raw/ea-funds.csv
+          # SFF publishes recommendations as HTML pages, so save the home page and
+          # every recommendations page it links to (the Monday task reads these files).
+          mkdir -p data/raw/sff
+          sffcode=$(curl -sSL --retry 3 -A "$UA" -o data/raw/sff/index.html -w '%{http_code}' "https://survivalandflourishing.fund/" 2>&1) || true
+          if [ "$sffcode" = "200" ] && [ "$(wc -c < data/raw/sff/index.html)" -gt 1000 ]; then
+            n=0
+            for path in $(grep -oE 'href="(https://survivalandflourishing\.fund)?/[^"]*recommendations[^"]*"' data/raw/sff/index.html \
+                          | sed -E 's#^href="(https://survivalandflourishing\.fund)?##; s#"$##' | sort -u); do
+              slug=$(echo "$path" | sed -E 's#^/##; s#/$##; s#[^A-Za-z0-9]+#-#g')
+              c=$(curl -sSL --retry 3 -A "$UA" -o "data/raw/sff/$slug.html" -w '%{http_code}' "https://survivalandflourishing.fund$path" 2>&1) || true
+              [ "$c" = "200" ] && n=$((n+1)) || rm -f "data/raw/sff/$slug.html"
+            done
+            echo "sff OK 200 pages=$n" >> "$log"; ok=$((ok+1))
+          else
+            echo "sff FAILED $sffcode" >> "$log"
+          fi
           cat "$log"
           [ "$ok" -gt 0 ] && date -u +"%Y-%m-%dT%H:%M:%SZ" > data/raw/fetched_at.txt || true
           echo "ok=$ok" >> "$GITHUB_ENV"
+
+      # Pre-compute Coefficient Giving + EA Funds candidates here, so the Monday
+      # task only reads a CSV and never has to run repository code itself.
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build candidates
+        run: |
+          pip install --quiet pandas
+          python scripts/candidates.py data/raw/coefficient-giving.csv data/raw/ea-funds.csv data/raw/candidates.csv \
+            && echo "candidates OK rows=$(python -c 'import pandas as p;print(len(p.read_csv("data/raw/candidates.csv")))')" >> data/raw/fetch_log.txt \
+            || echo "candidates FAILED" >> data/raw/fetch_log.txt
 
       - name: Commit results
         run: |
