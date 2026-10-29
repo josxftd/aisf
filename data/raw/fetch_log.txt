@@ -1,5 +1,6 @@
-run 2026-10-29T13:33:26Z
+run 2026-10-29T13:48:12Z
 coefficient-giving FAILED 403 text/html bytes=103 first_line=<html>
 ea-funds OK 200 text/csv bytes=300490
 sff OK 200 pages=14
+manifund OK 200 bytes=641359
 candidates OK rows=1430
