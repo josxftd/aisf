@@ -78,13 +78,11 @@ jobs:
             && echo "candidates OK rows=$(python -c 'import pandas as p;print(len(p.read_csv("data/raw/candidates.csv")))')" >> data/raw/fetch_log.txt \
             || echo "candidates FAILED" >> data/raw/fetch_log.txt
 
+      # Commit through GitHub's API so the commit is signed by GitHub (shows as Verified).
       - name: Commit results
-        run: |
-          git config user.name "aisf-bot"
-          git config user.email "aisf-bot@users.noreply.github.com"
-          git add data/raw
-          git diff --cached --quiet || git commit -m "Fetch grant sources $(date -u +%F)"
-          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python scripts/api_commit.py "Fetch grant sources $(date -u +%F)" data/raw
 
       - name: Fail if nothing downloaded
         if: env.ok == '0'
