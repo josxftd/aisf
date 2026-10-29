@@ -54,6 +54,14 @@ jobs:
           else
             echo "sff FAILED $sffcode" >> "$log"
           fi
+          # Manifund public API: backup for when the Manifund connector is unavailable.
+          mcode=$(curl -sSL --retry 3 -A "$UA" -o data/raw/manifund-projects.tmp -w '%{http_code}' "https://manifund.org/api/v0/projects" 2>&1) || true
+          if [ "$mcode" = "200" ] && head -c 1 data/raw/manifund-projects.tmp | grep -q '\['; then
+            mv data/raw/manifund-projects.tmp data/raw/manifund-projects.json
+            echo "manifund OK 200 bytes=$(wc -c < data/raw/manifund-projects.json)" >> "$log"
+          else
+            rm -f data/raw/manifund-projects.tmp; echo "manifund FAILED $mcode" >> "$log"
+          fi
           cat "$log"
           [ "$ok" -gt 0 ] && date -u +"%Y-%m-%dT%H:%M:%SZ" > data/raw/fetched_at.txt || true
           echo "ok=$ok" >> "$GITHUB_ENV"
