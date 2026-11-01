@@ -1,6 +1,6 @@
-run 2026-10-29T22:34:58Z
+run 2026-11-01T23:26:29Z
 coefficient-giving OK 200 text/csv bytes=2022871
 ea-funds OK 200 text/csv bytes=300490
 sff OK 200 pages=14
-manifund OK 200 bytes=648882
+manifund OK 200 bytes=628999
 candidates OK rows=1430
