@@ -203,6 +203,10 @@ function srcUrl(r){
   if(r.source==="Coefficient Giving")return "https://github.com/josxftd/aisf/blob/main/data/raw/coefficient-giving.csv";
   return "";
 }
+function srcLbl(r){const u=srcUrl(r);
+  if(/coefficientgiving\.org/.test(u))return "fund page";
+  if(/forum\.|alignmentforum|lesswrong/.test(u))return "announcement";
+  return SRCLBL[r.source]||"source"}
 const SRCLBL={"Manifund":"project page","SFF":"SFF round","EA Funds":"EA Funds database","Coefficient Giving":"source file"};
 const sum=a=>a.reduce((s,r)=>s+r.amount,0);
 const pct=(a,b)=>b?(a/b*100).toFixed(1)+"%":"0%";
@@ -333,7 +337,7 @@ function ledger(R){
   years.forEach(y=>{
     const list=byY[y].sort((a,b)=>b.amount-a.amount); const lim=state.open[y]||8;
     h+=`<div class="sec-head yr"><span>${y}</span><span class="grey">${+y===now?"current \u00b7 ":""}${fmt(sum(list))}</span></div>`;
-    h+=list.slice(0,lim).map(r=>`<div class="row"><span class="t">${esc(r.grantee||"Individual grantee")}</span><span class="m">${esc(r.title)}<br><span class="grey">${esc(TOPICS[r.topic]||r.topic)} \u00b7 ${esc(r.funder)}${r.inferred?" \u00b7 inferred":""}${srcUrl(r)?` \u00b7 <a class="src" href="${esc(srcUrl(r))}" target="_blank" rel="noopener">${SRCLBL[r.source]||"source"}</a>`:""}</span></span><span class="r num">${fmt(r.amount)}</span></div>`).join("");
+    h+=list.slice(0,lim).map(r=>`<div class="row"><span class="t">${esc(r.grantee||"Individual grantee")}</span><span class="m">${esc(r.title)}<br><span class="grey">${esc(TOPICS[r.topic]||r.topic)} \u00b7 ${esc(r.funder)}${r.inferred?" \u00b7 inferred":""}${srcUrl(r)?` \u00b7 <a class="src" href="${esc(srcUrl(r))}" target="_blank" rel="noopener">${srcLbl(r)}</a>`:""}</span></span><span class="r num">${fmt(r.amount)}</span></div>`).join("");
     if(list.length>lim) h+=`<button class="more" data-y="${y}">+ ${list.length-lim} more in ${y}</button>`;
   });
   $("lBody").innerHTML=h||'<p class="grey">No grants match.</p>';
