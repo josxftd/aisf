@@ -1,0 +1,21 @@
+AISF dataset licence
+
+The AISF dataset (data/aisf.json, data/reviewed_ids.txt and the research-area
+and method classifications, descriptions and source links it contains) is
+licensed under the Creative Commons Attribution 4.0 International licence
+(CC BY 4.0).
+
+Full licence text: https://creativecommons.org/licenses/by/4.0/legalcode
+
+You are free to share and adapt the data for any purpose, including
+commercially, provided you give appropriate credit, link to the licence and
+indicate if changes were made. Suggested credit:
+
+  AISF (ai safety funds), https://aisafetyfunds.org, CC BY 4.0
+
+Underlying grant records (grantees, amounts, dates and grant titles) are
+published by the funders: Coefficient Giving, EA Funds, the Survival and
+Flourishing Fund and Manifund. Some Coefficient Giving records are taken from
+Trace (https://trace.manifund.org, CC0). The files in data/raw/ are copies of
+those sources as published and remain subject to their publishers' terms; the
+CC BY 4.0 licence covers AISF's compilation and classification of them.

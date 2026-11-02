@@ -2,7 +2,9 @@
 
 > Public philanthropic grants to AI safety, classified by research area and method, updated weekly. Built to show which areas are underfunded relative to the rest of the field.
 
-Data covers Coefficient Giving (formerly Open Philanthropy), EA Funds (Long-Term Future Fund, EA Infrastructure Fund), the Survival and Flourishing Fund, and Manifund. It excludes frontier lab internal spending, venture capital, government funding and private donors.
+Data covers Coefficient Giving (formerly Open Philanthropy), EA Funds (Long-Term Future Fund, EA Infrastructure Fund), the Survival and Flourishing Fund, and Manifund. It excludes frontier lab internal spending, venture capital, government funding, private donors and other philanthropic funders (for example Longview Philanthropy and the Future of Life Institute's grants programme).
+
+Licence: data CC BY 4.0 (credit "AISF (ai safety funds), https://aisafetyfunds.org"); code MIT.
 
 ## Data
 

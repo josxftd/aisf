@@ -14,4 +14,8 @@ Where money for AI safety flows, sorted into ~13x research areas, so underfunded
 
 ## Coverage
 
-Coefficient Giving, EA Funds (LTFF, EAIF), Survival and Flourishing Fund, Manifund. Coefficient Giving grants are cross-checked weekly against [Trace](https://trace.manifund.org) (CC0), which also supplies Coefficient Giving grants missing from its archive file. Not currently covered: frontier lab internal spending, venture capital, government funding, private donors.
+Coefficient Giving, EA Funds (LTFF, EAIF), Survival and Flourishing Fund, Manifund. Coefficient Giving grants are cross-checked weekly against [Trace](https://trace.manifund.org) (CC0), which also supplies Coefficient Giving grants missing from its archive file. Not currently covered: frontier lab internal spending, venture capital, government funding, private donors, and other philanthropic funders such as Longview Philanthropy and the Future of Life Institute's grants programme.
+
+## Licence
+
+Code: [MIT](LICENSE). Data: [CC BY 4.0](LICENSE-DATA). Please credit "AISF (ai safety funds), https://aisafetyfunds.org". Underlying grant records are published by the funders; files in `data/raw/` remain subject to their publishers' terms.
